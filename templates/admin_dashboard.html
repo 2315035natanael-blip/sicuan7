@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Data Pengguna & Investasi</h2>
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>Nama</th>
+            <th>No HP</th>
+            <th>Email</th>
+            <th>Tujuan</th>
+            <th>Harga</th>
+            <th>Waktu</th>
+            <th>Profil Risiko</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.nama }}</td>
+            <td>{{ user.nohp }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.tujuan }}</td>
+            <td>{{ format_rupiah(user.harga) }}</td>
+            <td>{{ user.waktu_angka }} {{ user.waktu_satuan }}</td>
+            <td>{{ user.profil }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block footer %}
+<footer style="position: fixed; bottom: 0; width: 100%; text-align: center; background-color: #f2f2f2; padding: 10px; font-size: 14px;">
+    &copy; 2025 SiCuan. All rights reserved.
+</footer>
+{% endblock %}

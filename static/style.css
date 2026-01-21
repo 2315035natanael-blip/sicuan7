@@ -1,0 +1,337 @@
+/* ================= RESET ================= */
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: #f8f9fb;
+  color: #1d1d1f;
+}
+
+/* ================= NAVBAR ================= */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eee;
+}
+
+nav .nav-left {
+  font-weight: 700;
+  font-size: 20px;
+}
+
+nav a {
+  margin-left: 24px;
+  text-decoration: none;
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+nav a:hover {
+  color: #2cb67d;
+}
+
+/* ================= MAIN LAYOUT ================= */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* ================= HEADINGS ================= */
+h1 {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+p {
+  line-height: 1.6;
+  color: #444;
+}
+
+/* ================= BUTTON ================= */
+button,
+input[type="submit"] {
+  background-color: #2cb67d;
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  background-color: #24975f;
+  transform: translateY(-1px);
+}
+
+/* ================= CARD ================= */
+.card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+/* ================= GRID ================= */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* ================= FORM ================= */
+.form-card {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+input[type="radio"] {
+  width: auto;
+  padding: 0;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #2cb67d;
+}
+
+/* ================= RESULT ================= */
+.result-card {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.result-card ul {
+  padding-left: 20px;
+}
+
+/* ================= TABLE ================= */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 24px;
+  font-size: 14px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-table th {
+  background-color: #f4f4f4;
+  font-weight: 700;
+}
+
+/* ================= FOOTER ================= */
+footer {
+  margin-top: 60px;
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.form-card {
+  max-width: 700px;
+}
+
+.result-card {
+  max-width: 900px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.option input {
+  margin: 0;
+}
+
+/* ================= RESULT LAYOUT ================= */
+.result-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ================= HEADER ================= */
+.result-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.result-header h1 {
+  font-size: 28px;
+}
+
+/* ================= RESULT CARD ================= */
+.result-card {
+  margin-bottom: 32px;
+}
+
+/* ================= HIGHLIGHT ================= */
+.highlight-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2cb67d;
+  margin: 12px 0;
+}
+
+/* ================= STATUS ================= */
+.status {
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.status.success {
+  color: #2cb67d;
+}
+
+.status.danger {
+  color: #e74c3c;
+}
+
+/* ================= TEXT ================= */
+.small-text {
+  font-size: 13px;
+  color: #666;
+}
+
+.disclaimer {
+  font-size: 12px;
+  color: #777;
+  margin-top: 12px;
+}
+
+/* ================= ACTION ================= */
+.result-action {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.primary-btn {
+  background-color: #2cb67d;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background-color: #24975f;
+}
+
+/* ================= MARKET TREND ================= */
+.trend {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.trend.up {
+  color: #2cb67d;
+}
+
+.trend.down {
+  color: #e74c3c;
+}
+
+.trend.flat {
+  color: #888;
+}
+
+/* ================= CONFIDENCE BADGE ================= */
+.confidence {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.confidence.high {
+  background-color: #e6f7ef;
+  color: #2cb67d;
+}
+
+.confidence.medium {
+  background-color: #f2f2f2;
+  color: #555;
+}
+
+.confidence.low {
+  background-color: #fdecea;
+  color: #e74c3c;
+}

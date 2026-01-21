@@ -1,0 +1,135 @@
+[
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "orangtua",
+        "tujuan": "Beli Crocs",
+        "harga": 100000000,
+        "waktu_angka": 2,
+        "waktu_satuan": "bulan",
+        "profil": "Moderat"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "orangtua",
+        "tujuan": "Beli Crocs",
+        "harga": 100000000,
+        "waktu_angka": 2,
+        "waktu_satuan": "bulan",
+        "profil": "Moderat"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "guru",
+        "tujuan": "Beli Crocs",
+        "harga": 10000000000,
+        "waktu_angka": 2,
+        "waktu_satuan": "bulan",
+        "profil": "Moderat"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "guru",
+        "tujuan": "Beli Crocs",
+        "harga": 10000000000,
+        "waktu_angka": 2,
+        "waktu_satuan": "bulan",
+        "profil": "Moderat"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "orangtua",
+        "tujuan": "Beli Crocs",
+        "harga": 1000000000000,
+        "waktu_angka": 2,
+        "waktu_satuan": "bulan",
+        "profil": "Agresif"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "orangtua",
+        "tujuan": "Beli Crocs",
+        "harga": 1000000000000,
+        "waktu_angka": 2,
+        "waktu_satuan": "bulan",
+        "profil": "Agresif"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "orangtua",
+        "tujuan": "Beli Crocs",
+        "harga": 1000000000000,
+        "waktu_angka": 2,
+        "waktu_satuan": "bulan",
+        "profil": "Moderat"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "orangtua",
+        "tujuan": "Beli Crocs",
+        "harga": 100000000,
+        "waktu_angka": 5,
+        "waktu_satuan": "bulan",
+        "profil": "Moderat"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "orangtua",
+        "tujuan": "Beli Crocs",
+        "harga": 100000000,
+        "waktu_angka": 5,
+        "waktu_satuan": "bulan",
+        "profil": "Moderat"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "orangtua",
+        "tujuan": "Beli Crocs",
+        "harga": 20000000,
+        "waktu_angka": 5,
+        "waktu_satuan": "bulan",
+        "profil": "Moderat"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "karyawan",
+        "tujuan": "Beli Crocs",
+        "harga": 1000000,
+        "waktu_angka": 3,
+        "waktu_satuan": "bulan",
+        "profil": "Agresif"
+    },
+    {
+        "email": "zkarli38@gmail.com",
+        "nama": "Zachery",
+        "nohp": "0891038120",
+        "tipe": "karyawan",
+        "tujuan": "Beli Crocs",
+        "dana_awal": 450000,
+        "target": 1000000,
+        "waktu_angka": 3,
+        "waktu_satuan": "bulan",
+        "profil": "Agresif"
+    }
+]

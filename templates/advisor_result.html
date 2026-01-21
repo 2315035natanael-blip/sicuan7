@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="form-card">
+  <h2>Hasil Rekomendasi Investasi</h2>
+
+  <h3>Ringkasan Kondisi Anda</h3>
+  <p><strong>Tujuan:</strong> {{ data.tujuan }}</p>
+  <p><strong>Dana Saat Ini:</strong> {{ format_rupiah(data.dana_awal) }}</p>
+  <p><strong>Target Dana:</strong> {{ format_rupiah(data.target) }}</p>
+  <p><strong>Profil Risiko:</strong> {{ data.profil }}</p>
+
+  <h3 style="margin-top:30px;">Kebutuhan Dana</h3>
+  <p>
+    Untuk mencapai target dalam
+    <strong>{{ data.waktu_angka }} {{ data.waktu_satuan }}</strong>,
+    Anda perlu menyiapkan dana sekitar:
+  </p>
+
+  <h2 style="text-align:center; color:#2cb67d;">
+    {{ format_rupiah(kebutuhan_bulanan) }} / bulan
+  </h2>
+
+  {% if realistis %}
+    <p style="color:green; text-align:center; font-weight:bold;">
+      Target ini masih tergolong realistis dengan profil risiko Anda.
+    </p>
+  {% else %}
+    <p style="color:#e63946; text-align:center; font-weight:bold;">
+      Target ini cukup agresif dan berpotensi sulit dicapai dengan profil risiko Anda.
+    </p>
+    <p style="font-size:13px; text-align:center; color:#777;">
+      *Disarankan memperpanjang jangka waktu atau menambah dana bulanan.
+    </p>
+  {% endif %}
+
+  <hr style="margin:30px 0;">
+
+  <h3>Alokasi Dana Investasi (Dana Saat Ini)</h3>
+
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Aset</th>
+        <th>Persentase</th>
+        <th>Dana</th>
+        <th>Estimasi Return / Tahun</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in recommendation.allocation %}
+      <tr>
+        <td>{{ a.asset }}</td>
+        <td>{{ a.percentage }}%</td>
+        <td>{{ format_rupiah(a.amount) }}</td>
+        <td>{{ format_rupiah(a.expected_return) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:40px;">Kondisi Pasar Saat Ini</h3>
+
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Saham</th>
+        <th>Harga Terakhir</th>
+        <th>Tren</th>
+        <th>Keyakinan</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for saham, info in market_trends.items() %}
+      <tr>
+        <td>{{ saham }}</td>
+        <td>{{ info.last_price }}</td>
+        <td>{{ info.trend }}</td>
+        <td>{{ info.confidence }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p style="font-size:13px; color:#777; margin-top:15px;">
+    *Rekomendasi ini bersifat informasional dan bukan jaminan hasil investasi.
+  </p>
+
+  <div style="text-align:center; margin-top:30px;">
+    <a href="{{ url_for('advisor') }}" class="start-button">Kembali</a>
+  </div>
+</div>
+
+{% endblock %}

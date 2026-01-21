@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-card">
+<h2>Evaluasi Aplikasi (TAM)</h2>
+
+<form method="post">
+<p>1. Aplikasi ini mudah digunakan</p>
+<input type="radio" name="q1" value="1" required> Tidak setuju
+<input type="radio" name="q1" value="5"> Sangat setuju
+
+<p>2. Aplikasi ini membantu perencanaan keuangan</p>
+<input type="radio" name="q2" value="1" required> Tidak setuju
+<input type="radio" name="q2" value="5"> Sangat setuju
+
+<p>3. Saya tertarik menggunakan aplikasi ini kembali</p>
+<input type="radio" name="q3" value="1" required> Tidak setuju
+<input type="radio" name="q3" value="5"> Sangat setuju
+
+<br><br>
+<input type="submit" value="Kirim Evaluasi" class="start-button">
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="result-wrapper">
+
+  <!-- ================= HEADER ================= -->
+  <div class="result-header">
+    <h1>Hasil Rekomendasi Investasi</h1>
+  </div>
+
+  <!-- ================= RINGKASAN ================= -->
+  <div class="card result-card">
+    <h3>Ringkasan Kondisi Anda</h3>
+    <p><b>Tujuan:</b> {{ r.tujuan }}</p>
+    <p><b>Dana Saat Ini:</b> Rp {{ r.dana }}</p>
+    <p><b>Profil Risiko:</b> {{ r.profil }}</p>
+  </div>
+
+  <!-- ================= STATUS REALISTIS ================= -->
+  <div class="card result-card">
+    <h3>Status Target Investasi</h3>
+
+    {% if r.realistis %}
+      <p class="status success">
+        ✅ Target investasi Anda masih <b>realistis</b> dengan profil risiko saat ini.
+      </p>
+    {% else %}
+      <p class="status danger">
+        ⚠️ Target investasi Anda <b>kurang realistis</b> dengan kondisi saat ini.
+      </p>
+      <p class="small-text">
+        Disarankan untuk menambah dana, memperpanjang jangka waktu, atau menyesuaikan target.
+      </p>
+    {% endif %}
+  </div>
+
+  <!-- ================= ALOKASI DANA ================= -->
+  <div class="card result-card">
+    <h3>Alokasi Dana Investasi</h3>
+
+    <table class="admin-table">
+      <tr>
+        <th>Aset</th>
+        <th>Persentase</th>
+        <th>Dana</th>
+      </tr>
+      {% for a in r.alokasi %}
+      <tr>
+        <td>{{ a[0] }}</td>
+        <td>{{ a[1] }}%</td>
+        <td>Rp {{ a[2] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <p class="disclaimer">
+      <b>Obligasi:</b> Direpresentasikan oleh obligasi negara (SBN) seperti ORI atau SR yang bersifat relatif stabil.
+    </p>
+  </div>
+
+  <!-- ================= SAHAM GROWTH ================= -->
+  <div class="card result-card">
+    <h3>Instruksi Investasi Saham Growth (Top 3)</h3>
+    <p class="small-text">
+      Saham growth memiliki potensi pertumbuhan tinggi dengan risiko lebih besar.
+    </p>
+
+    <table class="admin-table">
+      <tr>
+        <th>Saham</th>
+        <th>Tren</th>
+        <th>Dana Dialokasikan</th>
+      </tr>
+      {% for s in r.growth %}
+      <tr>
+        <td><b>{{ s.kode }}</b></td>
+        <td>
+          {% if "Naik" in s.trend %}
+            <span class="trend up">📈 {{ s.trend }}</span>
+          {% elif "Turun" in s.trend %}
+            <span class="trend down">📉 {{ s.trend }}</span>
+          {% else %}
+            <span class="trend flat">➖ {{ s.trend }}</span>
+          {% endif %}
+        </td>
+        <td><b>Rp {{ s.alokasi }}</b></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- ================= SAHAM BLUE CHIP ================= -->
+  <div class="card result-card">
+    <h3>Instruksi Investasi Saham Blue Chip (Top 3)</h3>
+    <p class="small-text">
+      Saham blue chip cenderung stabil dan cocok untuk menjaga keseimbangan portofolio.
+    </p>
+
+    <table class="admin-table">
+      <tr>
+        <th>Saham</th>
+        <th>Tren</th>
+        <th>Dana Dialokasikan</th>
+      </tr>
+      {% for s in r.bluechip %}
+      <tr>
+        <td><b>{{ s.kode }}</b></td>
+        <td>
+          {% if "Naik" in s.trend %}
+            <span class="trend up">📈 {{ s.trend }}</span>
+          {% elif "Turun" in s.trend %}
+            <span class="trend down">📉 {{ s.trend }}</span>
+          {% else %}
+            <span class="trend flat">➖ {{ s.trend }}</span>
+          {% endif %}
+        </td>
+        <td><b>Rp {{ s.alokasi }}</b></td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <p class="disclaimer">
+      *Rekomendasi ini bersifat informasional dan bukan jaminan hasil investasi.
+    </p>
+  </div>
+
+  <!-- ================= ACTION ================= -->
+  <div class="result-action">
+    <a href="/">
+      <button class="primary-btn">Ulangi Simulasi</button>
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}

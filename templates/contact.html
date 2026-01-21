@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <h1>Hubungi Kami</h1>
+        <p>Silakan isi form di bawah ini untuk mengirimkan komentar, pertanyaan, kritik, atau komplain kepada kami.</p>
+
+        <form method="POST" action="/contact">
+            <input type="text" name="name" placeholder="Nama Lengkap" required>
+            <input type="email" name="email" placeholder="Email" required>
+
+            <select name="user_type" required>
+                <option value="">-- Anda adalah --</option>
+                <option value="Orang Tua">Orang Tua</option>
+                <option value="Guru">Guru</option>
+                <option value="Karyawan">Karyawan</option>
+            </select>
+
+            <select name="category" required>
+                <option value="">-- Jenis Pesan --</option>
+                <option value="Komentar">Komentar</option>
+                <option value="Pertanyaan">Pertanyaan</option>
+                <option value="Kritik">Kritik</option>
+                <option value="Komplain">Komplain</option>
+            </select>
+
+            <textarea name="message" rows="6" placeholder="Tulis pesan Anda di sini..." required></textarea>
+
+            <input type="submit" value="Kirim">
+        </form>
+    </div>
+</body>
+</html>
+
+{% endblock %}
+{% block footer %}
+<footer style="position: fixed; bottom: 0; width: 100%; text-align: center; background-color: #f2f2f2; padding: 10px; font-size: 14px;">
+    &copy; 2025 SiCuan. All rights reserved.
+</footer>
+{% endblock %}

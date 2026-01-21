@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-card">
+  <h2>Perencanaan Investasi</h2>
+
+  <form method="post" onsubmit="return validateForm();">
+
+    <!-- TUJUAN -->
+    <div class="form-group">
+      <input type="text" name="tujuan" required>
+      <label>Tujuan (contoh: Beli Sepatu)</label>
+    </div>
+
+    <!-- DANA AWAL -->
+    <div class="form-group">
+      <input type="text" id="dana_awal" name="dana_awal" required>
+      <label>Dana Saat Ini (Rp)</label>
+    </div>
+
+    <!-- TARGET -->
+    <div class="form-group">
+      <input type="text" id="harga" name="harga" required>
+      <label>Target Dana / Harga Barang (Rp)</label>
+    </div>
+
+    <!-- WAKTU -->
+    <div class="form-group">
+      <input type="number" id="waktu_angka" name="waktu_angka" required>
+      <label>Jangka Waktu</label>
+    </div>
+
+    <div class="form-group">
+      <select id="waktu_satuan" name="waktu_satuan" required>
+        <option value="bulan">Bulan</option>
+        <option value="tahun">Tahun</option>
+      </select>
+    </div>
+
+    {% if session.get('profil') %}
+      <div class="form-group">
+        <label>Profil Risiko Anda</label>
+        <input type="text" value="{{ session['profil'] }}" readonly>
+      </div>
+
+      <input type="submit" value="Dapatkan Rekomendasi" class="start-button">
+
+    {% else %}
+      <div style="text-align:center; margin-top:30px;">
+        <a href="{{ url_for('profil_form') }}" class="start-button">
+          Isi Profil Risiko
+        </a>
+      </div>
+    {% endif %}
+
+  </form>
+</div>
+
+<script>
+function formatRupiah(value) {
+  return 'Rp ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function setupCurrencyInput(id) {
+  const el = document.getElementById(id);
+
+  el.addEventListener('input', function () {
+    let raw = this.value.replace(/\D/g, '');
+    this.dataset.raw = raw;
+    this.value = raw ? formatRupiah(raw) : '';
+  });
+
+  el.addEventListener('focus', function () {
+    this.value = this.dataset.raw || '';
+  });
+
+  el.addEventListener('blur', function () {
+    if (this.dataset.raw) {
+      this.value = formatRupiah(this.dataset.raw);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  setupCurrencyInput('harga');
+  setupCurrencyInput('dana_awal');
+});
+
+function validateForm() {
+  document.getElementById('harga').value =
+    document.getElementById('harga').dataset.raw || '';
+  document.getElementById('dana_awal').value =
+    document.getElementById('dana_awal').dataset.raw || '';
+
+  return true;
+}
+</script>
+{% endblock %}

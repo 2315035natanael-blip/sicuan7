@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SiCuan</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">SiCuan</div>
+  <div>
+    <a href="/">Home</a>
+    <a href="/contact">Contact Us</a>
+    <a href="/about">About Us</a>
+    <a href="/admin">Admin</a>
+  </div>
+</nav>
+
+<main class="main">
+  {% block content %}{% endblock %}
+</main>
+
+<footer>
+  © 2026 SiCuan — Research Project
+</footer>
+
+</body>
+</html>
