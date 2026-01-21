@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import numpy as np
-import yfinance as yf
 import pandas as pd
+import yfinance as yf
+import re
 
 from markowitz import markowitz_optimize
 
@@ -23,8 +24,15 @@ def future_value_annuity(pmt, r, n):
     return pmt * (((1 + r) ** n - 1) / r)
 
 
+def parse_int(value):
+    if not value:
+        return 0
+    value = re.sub(r"[^\d]", "", value)
+    return int(value) if value else 0
+
+
 # ======================
-# SAHAM LIKUID (DIPISAH)
+# SAHAM LIST
 # ======================
 
 BLUECHIP_STOCKS = [
@@ -53,12 +61,15 @@ def get_trend(ticker):
     if data.empty or len(data) < 60:
         return "Sideways", 0
 
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.droplevel(1)
+
     data["MA20"] = data["Close"].rolling(20).mean()
     data["MA60"] = data["Close"].rolling(60).mean()
 
     ma20 = data["MA20"].iloc[-1]
     ma60 = data["MA60"].iloc[-1]
-    last_price = int(data["Close"].iloc[-1])
+    price = int(data["Close"].iloc[-1])
 
     if ma20 > ma60 * 1.01:
         trend = "Naik (Uptrend)"
@@ -67,35 +78,24 @@ def get_trend(ticker):
     else:
         trend = "Sideways"
 
-    return trend, last_price
+    return trend, price
 
 
-def score_stock(trend, profil):
-    score = 0
-
-    # skor tren
+def score_stock(trend):
     if trend == "Naik (Uptrend)":
-        score += 3
+        return 3
     elif trend == "Sideways":
-        score += 2
+        return 2
     else:
-        score += 1
-
-    # penyesuaian profil risiko
-    if profil == "agresif":
-        score += 2
-    elif profil == "moderat":
-        score += 1
-
-    return score
+        return 1
 
 
-def select_top_stocks(stock_list, profil, top_n=3):
+def select_top_stocks(stock_list, top_n=3):
     scored = []
 
     for kode in stock_list:
         trend, price = get_trend(kode)
-        score = score_stock(trend, profil)
+        score = score_stock(trend)
 
         scored.append({
             "kode": kode.replace(".JK", ""),
@@ -116,7 +116,6 @@ def allocate_by_score(stocks, total_fund):
         s["alokasi"] = int((s["score"] / total_score) * total_fund)
         sisa -= s["alokasi"]
 
-    # sisa rupiah ke skor tertinggi
     if stocks:
         stocks[0]["alokasi"] += sisa
 
@@ -124,7 +123,7 @@ def allocate_by_score(stocks, total_fund):
 
 
 # ======================
-# NAV PAGES
+# ROUTES
 # ======================
 
 @app.route("/")
@@ -148,11 +147,12 @@ def start():
 @app.route("/profil", methods=["GET", "POST"])
 def profil_form():
     if request.method == "POST":
-        total = sum(int(request.form.get(f"q{i}", 0)) for i in range(1, 9))
+        risk_score = sum(int(request.form.get(f"q{i}", 0)) for i in range(1, 9))
+        session["risk_score"] = risk_score
 
-        if total <= 14:
+        if risk_score <= 14:
             profil = "konservatif"
-        elif total <= 21:
+        elif risk_score <= 21:
             profil = "moderat"
         else:
             profil = "agresif"
@@ -163,38 +163,47 @@ def profil_form():
     return render_template("profil_form.html")
 
 
-# ======================
-# ADVISOR
-# ======================
-
 @app.route("/advisor", methods=["GET", "POST"])
 def advisor():
     if request.method == "POST":
 
         tujuan = request.form.get("tujuan")
-        dana_awal = int(request.form.get("dana_awal"))
-        target = int(request.form.get("harga"))
+        dana_awal = parse_int(request.form.get("dana_awal"))
+        target = parse_int(request.form.get("harga"))
 
-        waktu_angka = int(request.form.get("waktu_angka"))
+        waktu_angka = int(request.form.get("waktu_angka") or 0)
         waktu_satuan = request.form.get("waktu_satuan")
         bulan = waktu_angka * 12 if waktu_satuan == "tahun" else waktu_angka
 
         profil = session.get("profil", "moderat")
-
-        inflasi_bulanan = 0.003
-
-        r = 0.008 if profil == "konservatif" else 0.015 if profil == "moderat" else 0.03
+        risk_score = session.get("risk_score", 18)
 
         kebutuhan_per_bulan = max(0, (target - dana_awal) // max(1, bulan))
 
-        fv_total = (
-            future_value_lump_sum(dana_awal, r, bulan) +
-            future_value_annuity(kebutuhan_per_bulan, r, bulan)
-        )
+        # ======================
+        # PROFIL ANCHOR
+        # ======================
+        profil_alloc = {
+            "konservatif": np.array([0.25, 0.30, 0.45]),
+            "moderat":     np.array([0.40, 0.30, 0.30]),
+            "agresif":     np.array([0.60, 0.25, 0.15])
+        }[profil]
 
-        realistis = fv_total >= target
+        # ======================
+        # RISK INDEX
+        # ======================
+        SCORE_MIN, SCORE_MAX = 8, 24
+        risk_index = (risk_score - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)
+        risk_index = min(max(risk_index, 0), 1)
 
-        # ---------- MARKOWITZ ----------
+        # ======================
+        # ALPHA DINAMIS
+        # ======================
+        alpha = 0.7 - 0.2 * risk_index
+
+        # ======================
+        # MARKOWITZ
+        # ======================
         returns = np.array([0.15, 0.10, 0.05])
         cov = np.array([
             [0.10, 0.02, 0.01],
@@ -202,30 +211,38 @@ def advisor():
             [0.01, 0.01, 0.03]
         ])
 
-        weights = markowitz_optimize(returns, cov)
+        w_markowitz = np.array(markowitz_optimize(returns, cov))
 
-        dana_growth = int(dana_awal * weights[0])
-        dana_bluechip = int(dana_awal * weights[1])
-        dana_obligasi = int(dana_awal * weights[2])
+        # ======================
+        # HYBRID WEIGHT
+        # ======================
+        final_weight = alpha * profil_alloc + (1 - alpha) * w_markowitz
+        final_weight = final_weight / final_weight.sum()
+
+        dana_growth = int(dana_awal * final_weight[0])
+        dana_bluechip = int(dana_awal * final_weight[1])
+        dana_obligasi = int(dana_awal * final_weight[2])
 
         alokasi = [
-            ("Saham Growth", round(weights[0] * 100, 1), dana_growth),
-            ("Saham Blue Chip", round(weights[1] * 100, 1), dana_bluechip),
-            ("Obligasi", round(weights[2] * 100, 1), dana_obligasi)
+            ("Saham Growth", round(final_weight[0] * 100, 1), dana_growth),
+            ("Saham Blue Chip", round(final_weight[1] * 100, 1), dana_bluechip),
+            ("Obligasi", round(final_weight[2] * 100, 1), dana_obligasi)
         ]
 
-        # ---------- REKOMENDASI SAHAM ----------
-        growth_top = select_top_stocks(GROWTH_STOCKS, profil)
-        bluechip_top = select_top_stocks(BLUECHIP_STOCKS, profil)
+        growth_top = allocate_by_score(select_top_stocks(GROWTH_STOCKS), dana_growth)
+        bluechip_top = allocate_by_score(select_top_stocks(BLUECHIP_STOCKS), dana_bluechip)
 
-        growth_top = allocate_by_score(growth_top, dana_growth)
-        bluechip_top = allocate_by_score(bluechip_top, dana_bluechip)
+        r = 0.015
+        fv_total = (
+            future_value_lump_sum(dana_awal, r, bulan) +
+            future_value_annuity(kebutuhan_per_bulan, r, bulan)
+        )
+
+        realistis = fv_total >= target
 
         result = {
             "tujuan": tujuan,
             "dana": dana_awal,
-            "target": target,
-            "bulan": bulan,
             "profil": profil.capitalize(),
             "kebutuhan_per_bulan": kebutuhan_per_bulan,
             "realistis": realistis,
