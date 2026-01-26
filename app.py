@@ -17,12 +17,10 @@ app.secret_key = "sicuan"
 def future_value_lump_sum(pv, r, n):
     return pv * ((1 + r) ** n)
 
-
 def future_value_annuity(pmt, r, n):
     if r == 0:
         return pmt * n
     return pmt * (((1 + r) ** n - 1) / r)
-
 
 def parse_int(value):
     if not value:
@@ -123,13 +121,57 @@ def allocate_by_score(stocks, total_fund):
 
 
 # ======================
-# ROUTES
+# ROUTES (NAVBAR)
 # ======================
 
 @app.route("/")
 def home():
     return render_template("home.html")
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+
+# ======================
+# ADMIN LOGIN
+# ======================
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if username == "admin" and password == "admin123":
+            session["admin"] = True
+            return redirect(url_for("admin_dashboard"))
+        else:
+            return render_template("admin.html", error="Username atau password salah")
+
+    return render_template("admin.html")
+
+
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    if not session.get("admin"):
+        return redirect(url_for("admin"))
+    return render_template("admin_dashboard.html")
+
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin", None)
+    return redirect(url_for("home"))
+
+
+# ======================
+# START FLOW
+# ======================
 
 @app.route("/start", methods=["GET", "POST"])
 def start():
@@ -180,30 +222,12 @@ def advisor():
 
         kebutuhan_per_bulan = max(0, (target - dana_awal) // max(1, bulan))
 
-        # ======================
-        # PROFIL ANCHOR
-        # ======================
         profil_alloc = {
             "konservatif": np.array([0.25, 0.30, 0.45]),
             "moderat":     np.array([0.40, 0.30, 0.30]),
             "agresif":     np.array([0.60, 0.25, 0.15])
         }[profil]
 
-        # ======================
-        # RISK INDEX
-        # ======================
-        SCORE_MIN, SCORE_MAX = 8, 24
-        risk_index = (risk_score - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)
-        risk_index = min(max(risk_index, 0), 1)
-
-        # ======================
-        # ALPHA DINAMIS
-        # ======================
-        alpha = 0.7 - 0.2 * risk_index
-
-        # ======================
-        # MARKOWITZ
-        # ======================
         returns = np.array([0.15, 0.10, 0.05])
         cov = np.array([
             [0.10, 0.02, 0.01],
@@ -212,11 +236,7 @@ def advisor():
         ])
 
         w_markowitz = np.array(markowitz_optimize(returns, cov))
-
-        # ======================
-        # HYBRID WEIGHT
-        # ======================
-        final_weight = alpha * profil_alloc + (1 - alpha) * w_markowitz
+        final_weight = 0.7 * profil_alloc + 0.3 * w_markowitz
         final_weight = final_weight / final_weight.sum()
 
         dana_growth = int(dana_awal * final_weight[0])

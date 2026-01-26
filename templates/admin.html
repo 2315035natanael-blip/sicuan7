@@ -1,15 +1,22 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<h2>Admin Login</h2>
-{% if error %}<p style="color:red">{{ error }}</p>{% endif %}
-<form method="post">
-    <input type="text" name="username" placeholder="Username" required><br>
-    <input type="password" name="password" placeholder="Password" required><br>
+
+<div class="form-card card">
+  <h2>Admin Login</h2>
+
+  <form method="POST">
+    <label>Username</label>
+    <input type="text" name="username" required>
+
+    <label>Password</label>
+    <input type="password" name="password" required>
+
+    {% if error %}
+      <p style="color:red; margin-top:10px;">{{ error }}</p>
+    {% endif %}
+
     <input type="submit" value="Login">
-</form>
-{% endblock %}
-{% block footer %}
-<footer style="position: fixed; bottom: 0; width: 100%; text-align: center; background-color: #f2f2f2; padding: 10px; font-size: 14px;">
-    &copy; 2025 SiCuan. All rights reserved.
-</footer>
+  </form>
+</div>
+
 {% endblock %}
